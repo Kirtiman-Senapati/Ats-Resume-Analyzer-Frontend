@@ -88,17 +88,17 @@ function App() {
   };
 
 
-  // Extract text from Word (.docx)
+ // ==========================================
+  // 📝 WORD EXTRACTION
+  // ==========================================
   const extractWordText = async (file) => {
     try {
       const arrayBuffer = await file.arrayBuffer();
       const result = await mammoth.extractRawText({ arrayBuffer });
       return result.value.trim();
     } catch (error) {
-      console.error("Word extraction error:", error);
-      throw new Error(
-        `Failed to extract text from Word document: ${error.message}`
-      );
+      console.error("Word error:", error);
+      throw new Error(`Word extraction failed: ${error.message}`);
     }
   };
 
