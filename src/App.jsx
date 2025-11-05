@@ -294,7 +294,9 @@ function App() {
     }
   };
 
-  // Reset function
+   // ==========================================
+  // 🔄 RESET
+  // ==========================================
   const reset = () => {
     setUploadedFile(null);
     setAnalysis(null);
