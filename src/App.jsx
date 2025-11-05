@@ -1,4 +1,5 @@
 import { useState, useEffect } from "react";
+import axios from "axios";
 import constants, {
   buildPresenceChecklist,
   METRIC_CONFIG,
@@ -9,6 +10,17 @@ import pdfjsWorker from "pdfjs-dist/build/pdf.worker.min?url";
 import mammoth from "mammoth";
 
 pdfjslib.GlobalWorkerOptions.workerSrc = pdfjsWorker;
+
+// ==========================================
+// 📗 AXIOS CONFIGURATION
+// ==========================================
+const api = axios.create({
+  baseURL: '/api',
+  timeout: 60000,
+  headers: {
+    'Content-Type': 'application/json',
+  }
+});
 
 function App() {
   // State management
