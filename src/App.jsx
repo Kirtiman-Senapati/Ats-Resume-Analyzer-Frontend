@@ -131,57 +131,40 @@ function App() {
     }
   }; */
 
-  // Analyze resume
+ // ==========================================
+  // 🤖 ANALYZE RESUME
+  // ==========================================
   const analyzeResume = async (text) => {
     try {
       if (!text || text.trim().length < 50) {
-        throw new Error(
-          "Resume text is too short or empty. Please upload a valid resume."
-        );
+        throw new Error("Resume text too short");
       }
 
-      const prompt = constants.ANALYZE_RESUME_PROMPT.replace(
-        "{{DOCUMENT_TEXT}}",
-        text
-      );
+      console.log("📤 Calling backend API...");
 
-      console.log("Sending to AI...");
+      const response = await api.post('/analyze-resume', {
+        resumeText: text,
+        prompt: constants.ANALYZE_RESUME_PROMPT,
+      });
 
-      const response = await window.puter.ai.chat(
-        [
-          {
-            role: "system",
-            content:
-              "You are an expert resume reviewer. Always respond with valid JSON.",
-          },
-          { role: "user", content: prompt },
-        ],
-        { model: "gpt-4o" }
-      );
+      console.log("📥 Response:", response.data);
 
-      console.log("Raw AI response:", response);
-
-      let replyText = "";
-      if (typeof response === "string") {
-        replyText = response;
-      } else if (response.message?.content) {
-        replyText = response.message.content;
-      } else if (response.content) {
-        replyText = response.content;
-      } else {
-        throw new Error("Unexpected response format from AI");
+      if (!response.data.success) {
+        throw new Error(response.data.error || 'Analysis failed');
       }
 
-      const result = parseJsonResponse(replyText);
-
-      if (result.error) {
-        throw new Error(result.error);
-      }
-
-      return result;
+      return response.data.data;
+      
     } catch (error) {
-      console.error("Analyze resume error:", error);
-      throw error;
+      console.error("❌ Analysis error:", error);
+      
+      if (error.response) {
+        throw new Error(error.response.data.error || 'Backend error');
+      } else if (error.request) {
+        throw new Error('Backend not responding. Check if server is running on port 5000.');
+      } else {
+        throw error;
+      }
     }
   };
 
