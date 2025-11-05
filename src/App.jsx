@@ -439,7 +439,7 @@ function App() {
 
         {!showResults && (
           <div className="bg-slate-800/60 border-2 border-dashed border-cyan-600/50 rounded-xl p-12 text-center hover:border-cyan-500 transition-all shadow-lg shadow-cyan-900/20">
-            
+            <div className="upload-zone">
             <div className="text-6xl mb-4">📄</div>
             <h3 className="text-2xl text-gray-200 mb-2">Upload Your Resume</h3>
             <p className=" text-lg text-gray-400 mb-6">
@@ -450,20 +450,23 @@ function App() {
               type="file"
               accept=".pdf,.docx"
               onChange={handleFileUpload}
-              disabled={!AIReady}
+              disabled={!APIReady || isLoading}
               className="hidden"
               id="file-upload"
             />
             <label
               htmlFor="file-upload"
-              className={`inline-block px-8 py-3 rounded-lg font-bold cursor-pointer transition-all  bg-cyan-500 text-white hover:bg-cyan-400 hover:shadow-lg hover:shadow-cyan-500/30  ${
-                !AIReady
-                  ? "bg-gray-600 text-gray-400 cursor-not-allowed"
-                  : "bg-cyan-500 text-white hover:bg-cyan-400 hover:shadow-lg hover:shadow-cyan-500/30"
-              }`}
-            >
+              className={`inline-block px-8 py-3 rounded-lg font-bold cursor-pointer transition-all  bg-cyan-500 text-white hover:bg-cyan-400 hover:shadow-lg hover:shadow-cyan-500/30 `}>
               Choose File (PDF or Word)
             </label>
+
+            {!APIReady && (
+                <p className="text-red-400 mt-4 font-semibold">
+                  ⚠️ Backend not ready. Please start your server.
+                </p>
+              )}
+
+          </div>
           </div>
         )}
 
