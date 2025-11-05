@@ -103,7 +103,8 @@ function App() {
   };
 
   // Parse JSON response from AI
-  const parseJsonResponse = (reply) => {
+
+  /* const parseJsonResponse = (reply) => {
     try {
       if (!reply) {
         throw new Error("Empty response from AI");
@@ -128,7 +129,7 @@ function App() {
       console.error("Original reply:", reply);
       throw new Error(`Failed to parse AI response: ${err.message}`);
     }
-  };
+  }; */
 
   // Analyze resume
   const analyzeResume = async (text) => {
