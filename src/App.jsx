@@ -345,9 +345,17 @@ function App() {
     return "bg-red-500/80";
   };
 
+
+
+  // ==========================================
+  // 🖼️ JSX RENDER
+  // ==========================================
+
+
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 p-4 sm:p-6 lg:p-8">
       <div className="max-w-5xl mx-auto w-full">
+
         {/* Header */}
         <div className="text-center mb-8">
           <div className="inline-block bg-gradient-to-br from-cyan-400 to-cyan-300 px-8 py-3 mb-4 rounded-lg">
@@ -360,14 +368,19 @@ function App() {
           </p>
         </div>
 
-        {/* AI Status Indicator */}
-        {!AIReady && (
-          <div className="text-center mb-4">
-            <p className="text-yellow-400">
-              ⏳ Waiting for AI to initialize...
+       {/* BACKEND STATUS */}
+       
+        {!APIReady && (
+          <div className="text-center mb-4 bg-yellow-500/10 border border-yellow-500/30 rounded-lg p-4">
+            <p className="text-yellow-400 font-semibold">
+              ⏳ Connecting to backend... (Port 5000)
+            </p>
+            <p className="text-yellow-300 text-sm mt-2">
+              Make sure your backend server is running: <code>node server.js</code>
             </p>
           </div>
         )}
+
 
         {/* Mode Selector */}
         {!uploadedFile && (
