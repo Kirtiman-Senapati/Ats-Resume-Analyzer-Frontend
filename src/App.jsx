@@ -64,28 +64,29 @@ function App() {
   }, [APIReady]);
 
 
-  // Extract text from PDF
+  // ==========================================
+  // 📄 PDF EXTRACTION
+  // ==========================================
   const extractPDFText = async (file) => {
     try {
       const arrayBuffer = await file.arrayBuffer();
       const pdf = await pdfjslib.getDocument({ data: arrayBuffer }).promise;
       const texts = await Promise.all(
         Array.from({ length: pdf.numPages }, (_, i) =>
-          pdf
-            .getPage(i + 1)
-            .then((page) =>
-              page
-                .getTextContent()
-                .then((tc) => tc.items.map((item) => item.str).join("  "))
+          pdf.getPage(i + 1).then((page) =>
+            page.getTextContent().then((tc) =>
+              tc.items.map((item) => item.str).join("  ")
             )
+          )
         )
       );
       return texts.join("\n").trim();
     } catch (error) {
-      console.error("PDF extraction error:", error);
-      throw new Error(`Failed to extract text from PDF: ${error.message}`);
+      console.error("PDF error:", error);
+      throw new Error(`PDF extraction failed: ${error.message}`);
     }
   };
+
 
   // Extract text from Word (.docx)
   const extractWordText = async (file) => {
