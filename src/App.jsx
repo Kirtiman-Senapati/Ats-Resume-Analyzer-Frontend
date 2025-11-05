@@ -65,7 +65,9 @@ function App() {
       return result.value.trim();
     } catch (error) {
       console.error("Word extraction error:", error);
-      throw new Error(`Failed to extract text from Word document: ${error.message}`);
+      throw new Error(
+        `Failed to extract text from Word document: ${error.message}`
+      );
     }
   };
 
@@ -84,7 +86,7 @@ function App() {
       }
 
       const parsed = JSON.parse(match[0]);
-      
+
       if (!parsed.overallScore && !parsed.matchPercentage && !parsed.error) {
         throw new Error("Invalid AI response format - missing required fields");
       }
@@ -101,7 +103,9 @@ function App() {
   const analyzeResume = async (text) => {
     try {
       if (!text || text.trim().length < 50) {
-        throw new Error("Resume text is too short or empty. Please upload a valid resume.");
+        throw new Error(
+          "Resume text is too short or empty. Please upload a valid resume."
+        );
       }
 
       const prompt = constants.ANALYZE_RESUME_PROMPT.replace(
@@ -113,7 +117,11 @@ function App() {
 
       const response = await window.puter.ai.chat(
         [
-          { role: "system", content: "You are an expert resume reviewer. Always respond with valid JSON." },
+          {
+            role: "system",
+            content:
+              "You are an expert resume reviewer. Always respond with valid JSON.",
+          },
           { role: "user", content: prompt },
         ],
         { model: "gpt-4o" }
@@ -133,7 +141,7 @@ function App() {
       }
 
       const result = parseJsonResponse(replyText);
-      
+
       if (result.error) {
         throw new Error(result.error);
       }
@@ -153,18 +161,22 @@ function App() {
       }
 
       if (!jobDesc || jobDesc.trim().length < 50) {
-        throw new Error("Job description is too short. Please provide more details.");
+        throw new Error(
+          "Job description is too short. Please provide more details."
+        );
       }
 
-      const prompt = constants.JOB_MATCH_PROMPT
-        .replace("{{RESUME_TEXT}}", resumeText)
-        .replace("{{JOB_DESCRIPTION}}", jobDesc);
+      const prompt = constants.JOB_MATCH_PROMPT.replace(
+        "{{RESUME_TEXT}}",
+        resumeText
+      ).replace("{{JOB_DESCRIPTION}}", jobDesc);
 
       const response = await window.puter.ai.chat(
         [
           {
             role: "system",
-            content: "You are an expert recruiter and ATS system analyzer. Always respond with valid JSON.",
+            content:
+              "You are an expert recruiter and ATS system analyzer. Always respond with valid JSON.",
           },
           { role: "user", content: prompt },
         ],
@@ -199,7 +211,7 @@ function App() {
 
     const allowedTypes = [
       "application/pdf",
-      "application/vnd.openxmlformats-officedocument.wordprocessingml.document"
+      "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
     ];
 
     if (!allowedTypes.includes(file.type)) {
@@ -222,11 +234,14 @@ function App() {
 
     try {
       let text = "";
-      
+
       if (file.type === "application/pdf") {
         console.log("Extracting PDF text...");
         text = await extractPDFText(file);
-      } else if (file.type === "application/vnd.openxmlformats-officedocument.wordprocessingml.document") {
+      } else if (
+        file.type ===
+        "application/vnd.openxmlformats-officedocument.wordprocessingml.document"
+      ) {
         console.log("Extracting Word text...");
         text = await extractWordText(file);
       }
@@ -234,7 +249,9 @@ function App() {
       console.log("Extracted text length:", text.length);
 
       if (!text || text.trim().length < 50) {
-        throw new Error("Could not extract enough text from the document. Please ensure it contains text content.");
+        throw new Error(
+          "Could not extract enough text from the document. Please ensure it contains text content."
+        );
       }
 
       setResumeText(text);
@@ -242,28 +259,32 @@ function App() {
       if (mode === "analyzer") {
         console.log("Building presence checklist...");
         setPresenceChecklist(buildPresenceChecklist(text));
-        
+
         console.log("Analyzing resume...");
         const analysisResult = await analyzeResume(text);
         console.log("Analysis result:", analysisResult);
-        
+
         setAnalysis(analysisResult);
       } else {
         if (!jobDescription.trim()) {
           throw new Error("Please enter a job description first!");
         }
-        
+
         console.log("Matching with job...");
         const matchResult = await matchResumeWithJob(text, jobDescription);
         console.log("Match result:", matchResult);
-        
+
         setJobMatchResult(matchResult);
       }
-      
+
       setShowResults(true);
     } catch (err) {
       console.error("Upload handler error:", err);
-      alert(`Error: ${err.message || "An unexpected error occurred. Please try again."}`);
+      alert(
+        `Error: ${
+          err.message || "An unexpected error occurred. Please try again."
+        }`
+      );
       reset();
     } finally {
       setIsLoading(false);
@@ -283,21 +304,31 @@ function App() {
   // Helper functions
   const getMatchLevelColor = (level) => {
     switch (level) {
-      case "excellent": return "text-green-400";
-      case "good": return "text-blue-400";
-      case "fair": return "text-yellow-400";
-      case "poor": return "text-red-400";
-      default: return "text-gray-400";
+      case "excellent":
+        return "text-green-400";
+      case "good":
+        return "text-blue-400";
+      case "fair":
+        return "text-yellow-400";
+      case "poor":
+        return "text-red-400";
+      default:
+        return "text-gray-400";
     }
   };
 
   const getMatchLevelEmoji = (level) => {
     switch (level) {
-      case "excellent": return "🎉";
-      case "good": return "👍";
-      case "fair": return "⚠️";
-      case "poor": return "❌";
-      default: return "❓";
+      case "excellent":
+        return "🎉";
+      case "good":
+        return "👍";
+      case "fair":
+        return "⚠️";
+      case "poor":
+        return "❌";
+      default:
+        return "❓";
     }
   };
 
@@ -335,7 +366,9 @@ function App() {
         {/* AI Status Indicator */}
         {!AIReady && (
           <div className="text-center mb-4">
-            <p className="text-yellow-400">⏳ Waiting for AI to initialize...</p>
+            <p className="text-yellow-400">
+              ⏳ Waiting for AI to initialize...
+            </p>
           </div>
         )}
 
@@ -378,7 +411,8 @@ function App() {
               className="w-full h-64 bg-slate-900 border border-slate-700 rounded-lg p-4 text-gray-200 placeholder-gray-500 focus:outline-none focus:border-cyan-500"
             />
             <p className="text-gray-400 text-sm mt-2">
-              💡 Tip: Include requirements, skills, and responsibilities for best results
+              💡 Tip: Include requirements, skills, and responsibilities for
+              best results
             </p>
           </div>
         )}
@@ -387,8 +421,11 @@ function App() {
         {!uploadedFile && !isLoading && (
           <div className="bg-slate-800/60 border-2 border-dashed border-cyan-600/50 rounded-xl p-12 text-center hover:border-cyan-500 transition-all shadow-lg shadow-cyan-900/20">
             <div className="text-6xl mb-4">📄</div>
-           <h3 className="text-2xl text-gray-200 mb-2">Upload Your Resume</h3>
-            <p className=" text-lg text-gray-400 mb-6"> PDF or Word documents (.doc, .docx) supported</p>
+            <h3 className="text-2xl text-gray-200 mb-2">Upload Your Resume</h3>
+            <p className=" text-lg text-gray-400 mb-6">
+              {" "}
+              PDF or Word documents (.doc, .docx) supported
+            </p>
             <input
               type="file"
               accept=".pdf,.docx"
@@ -405,7 +442,7 @@ function App() {
                   : "bg-cyan-500 text-white hover:bg-cyan-400 hover:shadow-lg hover:shadow-cyan-500/30"
               }`}
             >
-               Choose File (PDF or Word)
+              Choose File (PDF or Word)
             </label>
           </div>
         )}
@@ -417,7 +454,9 @@ function App() {
             <h3 className="text-2xl text-white mb-3 font-bold">
               Analyzing Resume
             </h3>
-            <p className="text-gray-300">Please wait while AI reviews your resume...</p>
+            <p className="text-gray-300">
+              Please wait while AI reviews your resume...
+            </p>
           </div>
         )}
 
@@ -430,11 +469,22 @@ function App() {
                 <span className="text-4xl">🏆</span>
                 <h2 className="text-3xl font-bold text-white">Overall Score</h2>
               </div>
-              <div className={`text-9xl font-extrabold mb-6 ${getScoreColor(Analysis.overallScore)}`}>
+              <div
+                className={`text-9xl font-extrabold mb-6 ${getScoreColor(
+                  Analysis.overallScore
+                )}`}
+              >
                 {Analysis.overallScore}
               </div>
-              <div className={`inline-block px-8 py-3 rounded-full font-bold text-xl ${getScoreBadgeColor(Analysis.overallScore)} text-white mb-4`}>
-                📋 {parseInt(Analysis.overallScore) >= 7 ? "Good Job!" : "Needs Improved"}
+              <div
+                className={`inline-block px-8 py-3 rounded-full font-bold text-xl ${getScoreBadgeColor(
+                  Analysis.overallScore
+                )} text-white mb-4`}
+              >
+                📋{" "}
+                {parseInt(Analysis.overallScore) >= 7
+                  ? "Good Job!"
+                  : "Needs Improved"}
               </div>
               <p className="text-gray-300 text-base mt-6">
                 Score based on quantity, formatting, and keyword usage
@@ -447,13 +497,20 @@ function App() {
               <div className="bg-gradient-to-br from-teal-900/50 to-teal-800/50 border border-teal-700/50 rounded-2xl p-6">
                 <div className="flex items-center gap-3 mb-6">
                   <span className="text-3xl">💪</span>
-                  <h3 className="text-2xl font-bold text-teal-300 uppercase">Top Strengths</h3>
+                  <h3 className="text-2xl font-bold text-teal-300 uppercase">
+                    Top Strengths
+                  </h3>
                 </div>
                 <div className="space-y-3">
                   {Analysis.strengths?.map((item, i) => (
-                    <div key={i} className="bg-teal-900/40 rounded-xl p-4 border border-teal-700/30 hover:border-teal-600/50 transition-all">
+                    <div
+                      key={i}
+                      className="bg-teal-900/40 rounded-xl p-4 border border-teal-700/30 hover:border-teal-600/50 transition-all"
+                    >
                       <div className="flex items-start gap-3 text-gray-100">
-                        <span className="text-teal-400 text-xl font-bold mt-0.5">•</span>
+                        <span className="text-teal-400 text-xl font-bold mt-0.5">
+                          •
+                        </span>
                         <span className="leading-relaxed">{item}</span>
                       </div>
                     </div>
@@ -465,13 +522,20 @@ function App() {
               <div className="bg-gradient-to-br from-orange-900/50 to-orange-800/50 border border-orange-700/50 rounded-2xl p-6">
                 <div className="flex items-center gap-3 mb-6">
                   <span className="text-3xl">⚡</span>
-                  <h3 className="text-2xl font-bold text-orange-300 uppercase">Main Improvements</h3>
+                  <h3 className="text-2xl font-bold text-orange-300 uppercase">
+                    Main Improvements
+                  </h3>
                 </div>
                 <div className="space-y-3">
                   {Analysis.improvements?.map((item, i) => (
-                    <div key={i} className="bg-orange-900/40 rounded-xl p-4 border border-orange-700/30 hover:border-orange-600/50 transition-all">
+                    <div
+                      key={i}
+                      className="bg-orange-900/40 rounded-xl p-4 border border-orange-700/30 hover:border-orange-600/50 transition-all"
+                    >
                       <div className="flex items-start gap-3 text-gray-100">
-                        <span className="text-orange-400 text-xl font-bold mt-0.5">•</span>
+                        <span className="text-orange-400 text-xl font-bold mt-0.5">
+                          •
+                        </span>
                         <span className="leading-relaxed">{item}</span>
                       </div>
                     </div>
@@ -484,28 +548,40 @@ function App() {
             <div className="bg-gradient-to-br from-slate-800/90 to-slate-900/90 border border-slate-700 rounded-2xl p-6">
               <div className="flex items-center gap-3 mb-4">
                 <span className="text-3xl">📋</span>
-                <h3 className="text-2xl font-bold text-white">Executive Summary</h3>
+                <h3 className="text-2xl font-bold text-white">
+                  Executive Summary
+                </h3>
               </div>
-              <p className="text-gray-300 leading-relaxed text-lg">{Analysis.summary}</p>
+              <p className="text-gray-300 leading-relaxed text-lg">
+                {Analysis.summary}
+              </p>
             </div>
 
             {/* Performance Metrics */}
             <div className="bg-gradient-to-br from-slate-800/90 to-slate-900/90 border border-slate-700 rounded-2xl p-6">
               <div className="flex items-center gap-3 mb-8">
                 <span className="text-3xl">📊</span>
-                <h3 className="text-2xl font-bold text-white">Performance Matrics</h3>
+                <h3 className="text-2xl font-bold text-white">
+                  Performance Matrics
+                </h3>
               </div>
               <div className="space-y-6">
                 {METRIC_CONFIG.map((metric, i) => {
-                  const value = Analysis.performanceMetrics?.[metric.key] || metric.defaultValue;
+                  const value =
+                    Analysis.performanceMetrics?.[metric.key] ||
+                    metric.defaultValue;
                   return (
                     <div key={i} className="group/item">
                       <div className="flex justify-between mb-3">
                         <div className="flex items-center gap-3">
                           <span className="text-2xl">{metric.icon}</span>
-                          <span className="text-gray-200 font-semibold text-lg">{metric.label}</span>
+                          <span className="text-gray-200 font-semibold text-lg">
+                            {metric.label}
+                          </span>
                         </div>
-                        <span className="text-cyan-400 font-bold text-xl">{value}/10</span>
+                        <span className="text-cyan-400 font-bold text-xl">
+                          {value}/10
+                        </span>
                       </div>
                       <div className="h-4 bg-slate-900/70 rounded-full overflow-hidden border border-slate-700">
                         <div
@@ -523,19 +599,28 @@ function App() {
             <div className="bg-gradient-to-br from-slate-800/90 to-slate-900/90 border border-slate-700 rounded-2xl p-6">
               <div className="flex items-center gap-3 mb-8">
                 <span className="text-3xl">🔍</span>
-                <h3 className="text-2xl font-bold text-purple-400">Resume Insights</h3>
+                <h3 className="text-2xl font-bold text-purple-400">
+                  Resume Insights
+                </h3>
               </div>
 
               {/* Action Items */}
               <div className="mb-8">
                 <div className="flex items-center gap-3 mb-4">
                   <span className="text-2xl">🎯</span>
-                  <h4 className="text-xl font-bold text-red-400">Action Items</h4>
+                  <h4 className="text-xl font-bold text-red-400">
+                    Action Items
+                  </h4>
                 </div>
                 <div className="space-y-3">
                   {Analysis.actionItems?.map((item, i) => (
-                    <div key={i} className="flex items-start gap-3 text-gray-100 bg-slate-900/60 p-4 rounded-xl border border-slate-700 hover:border-red-600/50 transition-all">
-                      <span className="text-red-400 text-xl font-bold mt-0.5">•</span>
+                    <div
+                      key={i}
+                      className="flex items-start gap-3 text-gray-100 bg-slate-900/60 p-4 rounded-xl border border-slate-700 hover:border-red-600/50 transition-all"
+                    >
+                      <span className="text-red-400 text-xl font-bold mt-0.5">
+                        •
+                      </span>
                       <span className="leading-relaxed">{item}</span>
                     </div>
                   ))}
@@ -546,12 +631,19 @@ function App() {
               <div>
                 <div className="flex items-center gap-3 mb-4">
                   <span className="text-2xl">💡</span>
-                  <h4 className="text-xl font-bold text-yellow-400">Pro Tips</h4>
+                  <h4 className="text-xl font-bold text-yellow-400">
+                    Pro Tips
+                  </h4>
                 </div>
                 <div className="space-y-3">
                   {Analysis.proTips?.map((tip, i) => (
-                    <div key={i} className="flex items-start gap-3 text-gray-100 bg-slate-900/60 p-4 rounded-xl border border-slate-700 hover:border-yellow-600/50 transition-all">
-                      <span className="text-yellow-400 text-xl font-bold mt-0.5">•</span>
+                    <div
+                      key={i}
+                      className="flex items-start gap-3 text-gray-100 bg-slate-900/60 p-4 rounded-xl border border-slate-700 hover:border-yellow-600/50 transition-all"
+                    >
+                      <span className="text-yellow-400 text-xl font-bold mt-0.5">
+                        •
+                      </span>
                       <span className="leading-relaxed">{tip}</span>
                     </div>
                   ))}
@@ -563,14 +655,26 @@ function App() {
             <div className="bg-gradient-to-br from-indigo-900/50 to-purple-900/50 border border-purple-700/50 rounded-2xl p-6">
               <div className="flex items-center gap-3 mb-8">
                 <span className="text-3xl">🤖</span>
-                <h3 className="text-2xl font-bold text-purple-300">ATS Optimization</h3>
+                <h3 className="text-2xl font-bold text-purple-300">
+                  ATS Optimization
+                </h3>
               </div>
 
               {/* What is ATS? */}
               <div className="bg-indigo-900/60 border border-indigo-700/50 rounded-xl p-5 mb-8">
-                <h4 className="text-xl font-bold text-white mb-3">What is ATS?</h4>
+                <h4 className="text-xl font-bold text-white mb-3">
+                  What is ATS?
+                </h4>
                 <p className="text-gray-200 leading-relaxed">
-                  An ATS resume is a resume that has been optimized to pass through an Applicant Tracking System (ATS), which is software used by companies to screen job applications. To be ATS-friendly, a resume needs a simple format, standard headings, and relevant keywords from the job description to ensure the software can read it and rank it as a good match for the role. Fancy formatting, graphics, or tables can confuse the ATS and cause the resume to be rejected, even if a human would have found it qualified.
+                  An ATS resume is a resume that has been optimized to pass
+                  through an Applicant Tracking System (ATS), which is software
+                  used by companies to screen job applications. To be
+                  ATS-friendly, a resume needs a simple format, standard
+                  headings, and relevant keywords from the job description to
+                  ensure the software can read it and rank it as a good match
+                  for the role. Fancy formatting, graphics, or tables can
+                  confuse the ATS and cause the resume to be rejected, even if a
+                  human would have found it qualified.
                 </p>
               </div>
 
@@ -578,7 +682,9 @@ function App() {
               <div>
                 <div className="flex items-center gap-3 mb-5">
                   <span className="text-2xl">🤖</span>
-                  <h4 className="text-xl font-bold text-white">ATS Compatibility Checklist</h4>
+                  <h4 className="text-xl font-bold text-white">
+                    ATS Compatibility Checklist
+                  </h4>
                 </div>
                 <div className="space-y-3">
                   {PresenceChecklist.map((item, i) => (
@@ -591,7 +697,9 @@ function App() {
                       ) : (
                         <span className="text-red-400 text-2xl">❌</span>
                       )}
-                      <span className="text-gray-100 font-medium">{item.label}</span>
+                      <span className="text-gray-100 font-medium">
+                        {item.label}
+                      </span>
                     </div>
                   ))}
                 </div>
@@ -602,7 +710,9 @@ function App() {
             <div className="bg-gradient-to-br from-slate-800/90 to-slate-900/90 border border-slate-700 rounded-2xl p-6">
               <div className="flex items-center gap-3 mb-6">
                 <span className="text-3xl">🔑</span>
-                <h3 className="text-2xl font-bold text-cyan-400">Recommended Keywords</h3>
+                <h3 className="text-2xl font-bold text-cyan-400">
+                  Recommended Keywords
+                </h3>
               </div>
               <div className="flex flex-wrap gap-3 mb-6">
                 {Analysis.keywords?.map((kw, i) => (
@@ -617,7 +727,9 @@ function App() {
               <div className="flex items-start gap-3 bg-slate-900/60 p-5 rounded-xl border border-slate-700">
                 <span className="text-yellow-400 text-2xl">💡</span>
                 <p className="text-gray-200 leading-relaxed">
-                  Consider incorporating these keywords naturally into your resume/cv to improve ATS compatibility and increase Your chances for getting Job in company by Recruiters.
+                  Consider incorporating these keywords naturally into your
+                  resume/cv to improve ATS compatibility and increase Your
+                  chances for getting Job in company by Recruiters.
                 </p>
               </div>
             </div>
@@ -634,19 +746,25 @@ function App() {
           </div>
         )}
 
-             {/* Job Match Results */}
+        {/* Job Match Results */}
         {showResults && mode === "matcher" && jobMatchResult && (
           <div className="space-y-6">
             {/* Match Score Card */}
             <div className="bg-gradient-to-br from-teal-900/60 via-blue-900/60 to-indigo-900/60 border border-slate-700 rounded-2xl p-8 text-center">
               <div className="flex items-center justify-center gap-3 mb-6">
-                <span className="text-4xl">{getMatchLevelEmoji(jobMatchResult.matchLevel)}</span>
+                <span className="text-4xl">
+                  {getMatchLevelEmoji(jobMatchResult.matchLevel)}
+                </span>
                 <h2 className="text-3xl font-bold text-white">Match Score</h2>
               </div>
               <div className="text-9xl font-extrabold text-cyan-400 mb-6">
                 {jobMatchResult.matchPercentage}%
               </div>
-              <div className={`inline-block px-8 py-3 rounded-full font-bold text-xl capitalize ${getMatchLevelColor(jobMatchResult.matchLevel)} bg-slate-800/60 border border-slate-700 mb-4`}>
+              <div
+                className={`inline-block px-8 py-3 rounded-full font-bold text-xl capitalize ${getMatchLevelColor(
+                  jobMatchResult.matchLevel
+                )} bg-slate-800/60 border border-slate-700 mb-4`}
+              >
                 {jobMatchResult.matchLevel} Match
               </div>
               <p className="text-gray-300 text-base mt-6 max-w-2xl mx-auto">
@@ -658,10 +776,13 @@ function App() {
             <div className="bg-gradient-to-br from-slate-800/90 to-slate-900/90 border border-slate-700 rounded-2xl p-6">
               <div className="flex items-center gap-3 mb-4">
                 <span className="text-3xl">📋</span>
-                <h3 className="text-2xl font-bold text-white">Executive Summary</h3>
+                <h3 className="text-2xl font-bold text-white">
+                  Executive Summary
+                </h3>
               </div>
               <p className="text-gray-300 leading-relaxed text-lg">
-                {jobMatchResult.executiveSummary || jobMatchResult.overallAssessment}
+                {jobMatchResult.executiveSummary ||
+                  jobMatchResult.overallAssessment}
               </p>
             </div>
 
@@ -670,11 +791,16 @@ function App() {
               <div className="bg-gradient-to-br from-green-900/50 to-green-800/50 border border-green-700/50 rounded-2xl p-6">
                 <div className="flex items-center gap-3 mb-6">
                   <span className="text-3xl">✅</span>
-                  <h3 className="text-2xl font-bold text-green-300">Matching Skills</h3>
+                  <h3 className="text-2xl font-bold text-green-300">
+                    Matching Skills
+                  </h3>
                 </div>
                 <div className="space-y-3">
                   {jobMatchResult.matchingSkills?.map((skill, i) => (
-                    <div key={i} className="bg-green-900/40 rounded-xl p-4 border border-green-700/30">
+                    <div
+                      key={i}
+                      className="bg-green-900/40 rounded-xl p-4 border border-green-700/30"
+                    >
                       <div className="flex items-start gap-3 text-gray-100">
                         <span className="text-green-400 text-xl">✓</span>
                         <span>{skill}</span>
@@ -687,11 +813,16 @@ function App() {
               <div className="bg-gradient-to-br from-red-900/50 to-red-800/50 border border-red-700/50 rounded-2xl p-6">
                 <div className="flex items-center gap-3 mb-6">
                   <span className="text-3xl">❌</span>
-                  <h3 className="text-2xl font-bold text-red-300">Missing Skills</h3>
+                  <h3 className="text-2xl font-bold text-red-300">
+                    Missing Skills
+                  </h3>
                 </div>
                 <div className="space-y-3">
                   {jobMatchResult.missingSkills?.map((skill, i) => (
-                    <div key={i} className="bg-red-900/40 rounded-xl p-4 border border-red-700/30">
+                    <div
+                      key={i}
+                      className="bg-red-900/40 rounded-xl p-4 border border-red-700/30"
+                    >
                       <div className="flex items-start gap-3 text-gray-100">
                         <span className="text-red-400 text-xl">✗</span>
                         <span>{skill}</span>
@@ -706,28 +837,36 @@ function App() {
             <div className="bg-gradient-to-br from-slate-800/90 to-slate-900/90 border border-slate-700 rounded-2xl p-6">
               <div className="flex items-center gap-3 mb-8">
                 <span className="text-3xl">📊</span>
-                <h3 className="text-2xl font-bold text-white">Detailed Match Breakdown</h3>
+                <h3 className="text-2xl font-bold text-white">
+                  Detailed Match Breakdown
+                </h3>
               </div>
               <div className="space-y-6">
                 {JOB_MATCH_METRICS.map((metric, i) => {
-                  let value = jobMatchResult.detailedBreakdown?.[metric.key] || metric.defaultValue;
-                  
+                  let value =
+                    jobMatchResult.detailedBreakdown?.[metric.key] ||
+                    metric.defaultValue;
+
                   // FIX: If the value is greater than 10, it means AI returned it out of 100, so divide by 10
                   if (value > 10) {
                     value = Math.round(value / 10);
                   }
-                  
+
                   // Ensure value is between 1-10
                   value = Math.max(1, Math.min(10, value));
-                  
+
                   return (
                     <div key={i}>
                       <div className="flex justify-between mb-3">
                         <div className="flex items-center gap-3">
                           <span className="text-2xl">{metric.icon}</span>
-                          <span className="text-gray-200 font-semibold text-lg">{metric.label}</span>
+                          <span className="text-gray-200 font-semibold text-lg">
+                            {metric.label}
+                          </span>
                         </div>
-                        <span className="text-cyan-400 font-bold text-xl">{value}/10</span>
+                        <span className="text-cyan-400 font-bold text-xl">
+                          {value}/10
+                        </span>
                       </div>
                       <div className="h-4 bg-slate-900/70 rounded-full overflow-hidden border border-slate-700">
                         <div
@@ -746,11 +885,16 @@ function App() {
               <div className="bg-gradient-to-br from-teal-900/50 to-teal-800/50 border border-teal-700/50 rounded-2xl p-6">
                 <div className="flex items-center gap-3 mb-6">
                   <span className="text-3xl">💪</span>
-                  <h3 className="text-2xl font-bold text-teal-300">Strengths for This Job</h3>
+                  <h3 className="text-2xl font-bold text-teal-300">
+                    Strengths for This Job
+                  </h3>
                 </div>
                 <div className="space-y-3">
                   {jobMatchResult.strengthsForThisJob?.map((strength, i) => (
-                    <div key={i} className="bg-teal-900/40 rounded-xl p-4 border border-teal-700/30">
+                    <div
+                      key={i}
+                      className="bg-teal-900/40 rounded-xl p-4 border border-teal-700/30"
+                    >
                       <div className="flex items-start gap-3 text-gray-100">
                         <span className="text-teal-400 text-xl">•</span>
                         <span>{strength}</span>
@@ -763,12 +907,17 @@ function App() {
               <div className="bg-gradient-to-br from-orange-900/50 to-orange-800/50 border border-orange-700/50 rounded-2xl p-6">
                 <div className="flex items-center gap-3 mb-6">
                   <span className="text-3xl">⚠️</span>
-                  <h3 className="text-2xl font-bold text-orange-300">Areas of Concern</h3>
+                  <h3 className="text-2xl font-bold text-orange-300">
+                    Areas of Concern
+                  </h3>
                 </div>
 
                 <div className="space-y-3">
                   {jobMatchResult.weaknessesForThisJob?.map((weakness, i) => (
-                    <div key={i} className="bg-orange-900/40 rounded-xl p-4 border border-orange-700/30">
+                    <div
+                      key={i}
+                      className="bg-orange-900/40 rounded-xl p-4 border border-orange-700/30"
+                    >
                       <div className="flex items-start gap-3 text-gray-100">
                         <span className="text-orange-400 text-xl">•</span>
                         <span>{weakness}</span>
@@ -776,7 +925,6 @@ function App() {
                     </div>
                   ))}
                 </div>
-                
               </div>
             </div>
 
@@ -784,11 +932,16 @@ function App() {
             <div className="bg-gradient-to-br from-slate-800/90 to-slate-900/90 border border-slate-700 rounded-2xl p-6">
               <div className="flex items-center gap-3 mb-6">
                 <span className="text-3xl">💡</span>
-                <h3 className="text-2xl font-bold text-yellow-400">Recommendations</h3>
+                <h3 className="text-2xl font-bold text-yellow-400">
+                  Recommendations
+                </h3>
               </div>
               <div className="space-y-3">
                 {jobMatchResult.recommendations?.map((rec, i) => (
-                  <div key={i} className="flex items-start gap-3 text-gray-100 bg-slate-900/60 p-4 rounded-xl border border-slate-700 hover:border-yellow-600/50 transition-all">
+                  <div
+                    key={i}
+                    className="flex items-start gap-3 text-gray-100 bg-slate-900/60 p-4 rounded-xl border border-slate-700 hover:border-yellow-600/50 transition-all"
+                  >
                     <span className="text-yellow-400 text-xl font-bold">•</span>
                     <span className="leading-relaxed">{rec}</span>
                   </div>
@@ -807,7 +960,6 @@ function App() {
             </div>
           </div>
         )}
-
       </div>
     </div>
   );
