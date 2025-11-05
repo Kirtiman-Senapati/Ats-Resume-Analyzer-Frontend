@@ -306,34 +306,26 @@ function App() {
     setShowResults(false);
   };
 
-  // Helper functions
+// ==========================================
+  // 🎨 HELPER FUNCTIONS
+  // ==========================================
   const getMatchLevelColor = (level) => {
     switch (level) {
-      case "excellent":
-        return "text-green-400";
-      case "good":
-        return "text-blue-400";
-      case "fair":
-        return "text-yellow-400";
-      case "poor":
-        return "text-red-400";
-      default:
-        return "text-gray-400";
+      case "excellent": return "text-green-400";
+      case "good": return "text-blue-400";
+      case "fair": return "text-yellow-400";
+      case "poor": return "text-red-400";
+      default: return "text-gray-400";
     }
   };
 
   const getMatchLevelEmoji = (level) => {
     switch (level) {
-      case "excellent":
-        return "🎉";
-      case "good":
-        return "👍";
-      case "fair":
-        return "⚠️";
-      case "poor":
-        return "❌";
-      default:
-        return "❓";
+      case "excellent": return "🎉";
+      case "good": return "👍";
+      case "fair": return "⚠️";
+      case "poor": return "❌";
+      default: return "❓";
     }
   };
 
