@@ -24,7 +24,7 @@ const api = axios.create({
 
 function App() {
   // State management
-  const [AIReady, setAiReady] = useState(false);
+  const [APIReady, setAPIReady] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [uploadedFile, setUploadedFile] = useState(null);
   const [Analysis, setAnalysis] = useState(null);
@@ -34,7 +34,7 @@ function App() {
   const [jobDescription, setJobDescription] = useState("");
   const [jobMatchResult, setJobMatchResult] = useState(null);
   const [showResults, setShowResults] = useState(false);
-
+  
   // Check if Puter AI is ready
   useEffect(() => {
     const interval = setInterval(() => {
