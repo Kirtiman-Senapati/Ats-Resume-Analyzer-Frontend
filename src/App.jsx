@@ -34,17 +34,35 @@ function App() {
   const [jobDescription, setJobDescription] = useState("");
   const [jobMatchResult, setJobMatchResult] = useState(null);
   const [showResults, setShowResults] = useState(false);
+
   
-  // Check if Puter AI is ready
+  // ==========================================
+  // ⚡ CHECK BACKEND API
+  // ==========================================
   useEffect(() => {
-    const interval = setInterval(() => {
-      if (window.puter?.ai?.chat) {
-        setAiReady(true);
-        clearInterval(interval);
+    const checkBackend = async () => {
+      try {
+        const response = await api.get('/health');
+        
+        if (response.data.status === 'ok') {
+          setAPIReady(true);
+          console.log(`✅ Backend ready: ${response.data.provider}`);
+        }
+      } catch (error) {
+        console.error('❌ Backend unavailable:', error.message);
+        setAPIReady(false);
       }
-    }, 300);
+    };
+    
+    checkBackend();
+    
+    const interval = setInterval(() => {
+      if (!APIReady) checkBackend();
+    }, 5000);
+    
     return () => clearInterval(interval);
-  }, []);
+  }, [APIReady]);
+
 
   // Extract text from PDF
   const extractPDFText = async (file) => {
