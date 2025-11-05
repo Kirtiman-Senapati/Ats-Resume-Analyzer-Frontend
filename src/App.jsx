@@ -242,60 +242,52 @@ function App() {
     setPresenceChecklist([]);
     setJobMatchResult(null);
     setShowResults(false);
-
+    
+    
     try {
       let text = "";
 
       if (file.type === "application/pdf") {
-        console.log("Extracting PDF text...");
+        console.log("Extracting PDF...");
         text = await extractPDFText(file);
-      } else if (
-        file.type ===
-        "application/vnd.openxmlformats-officedocument.wordprocessingml.document"
-      ) {
-        console.log("Extracting Word text...");
+      } else {
+        console.log("Extracting Word...");
         text = await extractWordText(file);
       }
 
-      console.log("Extracted text length:", text.length);
+      console.log(`Extracted: ${text.length} chars`);
 
       if (!text || text.trim().length < 50) {
-        throw new Error(
-          "Could not extract enough text from the document. Please ensure it contains text content."
-        );
+        throw new Error("Not enough text extracted");
       }
 
       setResumeText(text);
 
       if (mode === "analyzer") {
-        console.log("Building presence checklist...");
+        console.log("Building checklist...");
         setPresenceChecklist(buildPresenceChecklist(text));
 
-        console.log("Analyzing resume...");
+        console.log("Analyzing...");
         const analysisResult = await analyzeResume(text);
-        console.log("Analysis result:", analysisResult);
+        console.log("Analysis done!");
 
         setAnalysis(analysisResult);
       } else {
         if (!jobDescription.trim()) {
-          throw new Error("Please enter a job description first!");
+          throw new Error("Enter job description first!");
         }
 
-        console.log("Matching with job...");
+        console.log("Matching...");
         const matchResult = await matchResumeWithJob(text, jobDescription);
-        console.log("Match result:", matchResult);
+        console.log("Match done!");
 
         setJobMatchResult(matchResult);
       }
 
       setShowResults(true);
     } catch (err) {
-      console.error("Upload handler error:", err);
-      alert(
-        `Error: ${
-          err.message || "An unexpected error occurred. Please try again."
-        }`
-      );
+      console.error("Error:", err);
+      alert(`Error: ${err.message}`);
       reset();
     } finally {
       setIsLoading(false);
