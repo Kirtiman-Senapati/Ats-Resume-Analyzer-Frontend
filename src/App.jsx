@@ -168,54 +168,49 @@ function App() {
     }
   };
 
-  // Match resume with job
+  // ==========================================
+  // 🎯 MATCH JOB
+  // ==========================================
   const matchResumeWithJob = async (resumeText, jobDesc) => {
     try {
       if (!resumeText || resumeText.trim().length < 50) {
-        throw new Error("Resume text is too short or empty.");
+        throw new Error("Resume text too short");
       }
 
       if (!jobDesc || jobDesc.trim().length < 50) {
-        throw new Error(
-          "Job description is too short. Please provide more details."
-        );
+        throw new Error("Job description too short");
       }
 
-      const prompt = constants.JOB_MATCH_PROMPT.replace(
-        "{{RESUME_TEXT}}",
-        resumeText
-      ).replace("{{JOB_DESCRIPTION}}", jobDesc);
+      console.log("📤 Sending match request...");
 
-      const response = await window.puter.ai.chat(
-        [
-          {
-            role: "system",
-            content:
-              "You are an expert recruiter and ATS system analyzer. Always respond with valid JSON.",
-          },
-          { role: "user", content: prompt },
-        ],
-        { model: "gpt-4o" }
-      );
+      const response = await api.post('/match-job', {
+        resumeText: resumeText,
+        jobDescription: jobDesc,
+        prompt: constants.JOB_MATCH_PROMPT,
+      });
 
-      let replyText = "";
-      if (typeof response === "string") {
-        replyText = response;
-      } else if (response.message?.content) {
-        replyText = response.message.content;
-      } else if (response.content) {
-        replyText = response.content;
-      } else {
-        throw new Error("Unexpected response format from AI");
+      console.log("📥 Match response:", response.data);
+
+      if (!response.data.success) {
+        throw new Error(response.data.error || 'Match failed');
       }
 
-      const result = parseJsonResponse(replyText);
-      return result;
+      return response.data.data;
+      
     } catch (error) {
-      console.error("Match resume error:", error);
-      throw error;
+      console.error("❌ Match error:", error);
+      
+      if (error.response) {
+        throw new Error(error.response.data.error || 'Backend error');
+      } else if (error.request) {
+        throw new Error('Backend not responding');
+      } else {
+        throw error;
+      }
     }
   };
+
+  
 
   // Handle file upload
   const handleFileUpload = async (e) => {
