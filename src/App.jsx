@@ -131,7 +131,9 @@ function App() {
     }
   }; */
 
- // ==========================================
+ 
+ 
+  // ==========================================
   // 🤖 ANALYZE RESUME
   // ==========================================
   const analyzeResume = async (text) => {
@@ -383,13 +385,12 @@ function App() {
 
 
         {/* MODE SELECTOR */}
-        {!uploadedFile && (
+        
           <div className="flex justify-center gap-4 mb-8">
             <button
-              onClick={() => {
-              setMode("analyzer");
-              reset();
-            }}
+              onClick={() => {setMode("analyzer");
+                reset();
+              }}
               className={`px-6 py-3 rounded-lg font-semibold transition-all ${
                 mode === "analyzer"
                   ? "bg-cyan-500 text-white shadow-lg shadow-cyan-500/30"
@@ -398,8 +399,10 @@ function App() {
             >
               📊 Resume Analyzer
             </button>
+
+            {/* Matcher Button */}
             <button
-              onClick={() => setMode("matcher")}
+              onClick={() => {setMode("matcher");reset();}}
               className={`px-6 py-3 rounded-lg font-semibold transition-all ${
                 mode === "matcher"
                   ? "bg-cyan-500 text-white shadow-lg shadow-cyan-500/30"
@@ -407,20 +410,22 @@ function App() {
               }`}
             >
               🎯 Job Matcher
-            </button>
-          </div>
-        )}
 
-        {/* Job Description Input */}
-        {mode === "matcher" && !uploadedFile && (
+            </button>
+
+          </div>
+        
+
+        {/* JOB DESCRIPTION INPUT (Matcher Mode Only) */}
+        {mode === "matcher" && !showResults &&  (
           <div className="bg-slate-800/80 border border-cyan-600/50 rounded-xl p-6 mb-6">
             <h3 className="text-xl font-bold text-white mb-3">
-              📝 Paste Job Description
+              📝 Enter  Job Description
             </h3>
             <textarea
               value={jobDescription}
               onChange={(e) => setJobDescription(e.target.value)}
-              placeholder="Paste the complete job description here..."
+              placeholder="Enter the complete job description here..."
               className="w-full h-64 bg-slate-900 border border-slate-700 rounded-lg p-4 text-gray-200 placeholder-gray-500 focus:outline-none focus:border-cyan-500"
             />
             <p className="text-gray-400 text-sm mt-2">
@@ -430,9 +435,11 @@ function App() {
           </div>
         )}
 
-        {/* File Upload Section */}
-        {!uploadedFile && !isLoading && (
+        {/* File Upload Section/ /* UPLOAD AREA  */}
+
+        {!showResults && (
           <div className="bg-slate-800/60 border-2 border-dashed border-cyan-600/50 rounded-xl p-12 text-center hover:border-cyan-500 transition-all shadow-lg shadow-cyan-900/20">
+            
             <div className="text-6xl mb-4">📄</div>
             <h3 className="text-2xl text-gray-200 mb-2">Upload Your Resume</h3>
             <p className=" text-lg text-gray-400 mb-6">
