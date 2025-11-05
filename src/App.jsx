@@ -210,14 +210,15 @@ function App() {
     }
   };
 
-  
 
-  // Handle file upload
-  const handleFileUpload = async (e) => {
-    const file = e.target.files[0];
+
+// ==========================================
+  // 🆕 PROCESS FILE/HANDEL FILE Functon
+  // ==========================================
+  const processFile = async (file) => {
     if (!file) return;
 
-    console.log("File selected:", file.name, file.type);
+    console.log("File:", file.name, file.type);
 
     const allowedTypes = [
       "application/pdf",
@@ -225,12 +226,12 @@ function App() {
     ];
 
     if (!allowedTypes.includes(file.type)) {
-      alert("Please upload PDF or Word (.docx) document only.");
+      alert("Please upload PDF or Word (.docx) only");
       return;
     }
 
-    if (!AIReady) {
-      alert("AI is not ready yet. Please wait a moment and try again.");
+    if (!APIReady) {
+      alert("Backend not ready. Please wait a moment and try again ...");
       return;
     }
 
