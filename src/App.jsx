@@ -369,7 +369,7 @@ function App() {
         </div>
 
        {/* BACKEND STATUS */}
-       
+
         {!APIReady && (
           <div className="text-center mb-4 bg-yellow-500/10 border border-yellow-500/30 rounded-lg p-4">
             <p className="text-yellow-400 font-semibold">
@@ -382,11 +382,14 @@ function App() {
         )}
 
 
-        {/* Mode Selector */}
+        {/* MODE SELECTOR */}
         {!uploadedFile && (
           <div className="flex justify-center gap-4 mb-8">
             <button
-              onClick={() => setMode("analyzer")}
+              onClick={() => {
+              setMode("analyzer");
+              reset();
+            }}
               className={`px-6 py-3 rounded-lg font-semibold transition-all ${
                 mode === "analyzer"
                   ? "bg-cyan-500 text-white shadow-lg shadow-cyan-500/30"
