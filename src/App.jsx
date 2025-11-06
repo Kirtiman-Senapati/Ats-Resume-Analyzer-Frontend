@@ -15,7 +15,7 @@ pdfjslib.GlobalWorkerOptions.workerSrc = pdfjsWorker;
 // 📗 AXIOS CONFIGURATION
 // ==========================================
 const api = axios.create({
-  baseURL: '/api',
+ baseURL: 'http://localhost:5000/api',
   timeout: 60000,
   headers: {
     'Content-Type': 'application/json',
@@ -477,14 +477,19 @@ function App() {
           </div>
           
         )}
-
-        {/* Loading State */}
+        {/* LOADING STATE */}
         {isLoading && (
+          
           <div className="bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 border border-cyan-600/30 rounded-xl p-12 text-center">
-            <div className="w-16 h-16 border-4 border-cyan-400 border-t-transparent rounded-full animate-spin mx-auto mb-6"></div>
+
+            <div className="w-16 h-16 border-4 border-cyan-400 border-t-transparent rounded-full animate-spin mx-auto mb-6">
+
+            </div>
+
             <h3 className="text-2xl text-white mb-3 font-bold">
               Analyzing Resume
             </h3>
+            
             <p className="text-gray-300">
               Please wait while AI reviews your resume...
             </p>
