@@ -430,6 +430,7 @@ function App() {
             <h3 className="text-xl font-bold text-white mb-3">
               📝 Enter  Job Description
             </h3>
+
             <textarea
               value={jobDescription}
               onChange={(e) => setJobDescription(e.target.value)}
@@ -448,7 +449,9 @@ function App() {
         {!showResults && (
           <div className="bg-slate-800/60 border-2 border-dashed border-cyan-600/50 rounded-xl p-12 text-center hover:border-cyan-500 transition-all shadow-lg shadow-cyan-900/20">
           
-            <div className="text-6xl mb-4">📄</div>
+            <div className="w-20 h-20 mx-auto mb-4 bg-gradient-to-br from-cyan-400 to-blue-500 rounded-2xl flex items-center justify-center">
+                  <span className="text-4xl">📄</span>
+            </div>
             <h3 className="text-2xl text-gray-200 mb-2">Upload Your Resume</h3>
             <p className=" text-lg text-gray-400 mb-6">
               {" "}
