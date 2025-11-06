@@ -531,9 +531,7 @@ function App() {
           
           <div className="bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 border border-cyan-600/30 rounded-xl p-12 text-center">
 
-            <div className="w-16 h-16 border-4 border-cyan-400 border-t-transparent rounded-full animate-spin mx-auto mb-6">
-
-            </div>
+            <div className="w-16 h-16 border-4 border-cyan-400 border-t-transparent rounded-full animate-spin mx-auto mb-6"></div>
 
             <h3 className="text-2xl text-white mb-3 font-bold">
               Analyzing Resume
@@ -545,9 +543,29 @@ function App() {
           </div>
         )}
 
-        {/* Resume Analysis Results */}
+
+        {/* Resume Analysis Results after uploading file amd loading screen main dashboard  */}
         {showResults && mode === "analyzer" && Analysis && (
           <div className="space-y-6">
+
+            {/* File Info */}
+            <div className="file-info-card flex items-center justify-between">
+              <div className="flex items-center gap-4">
+                <span className="text-4xl">📄</span>
+                <div>
+                  <h3 className="text-lg font-semibold text-white">
+                    {uploadedFile?.name}
+                  </h3>
+                  <p className="text-slate-400 text-sm">
+                    {ResumeText.length} characters analyzed
+                  </p>
+                </div>
+              </div>
+              <button onClick={reset} className="btn-secondary">
+                Upload New
+              </button>
+            </div>
+            
             {/* Overall Score Card - Matching screenshot design */}
             <div className="bg-gradient-to-br from-teal-900/60 via-blue-900/60 to-indigo-900/60 border border-slate-700 rounded-2xl p-8 text-center">
               <div className="flex items-center justify-center gap-3 mb-6">
