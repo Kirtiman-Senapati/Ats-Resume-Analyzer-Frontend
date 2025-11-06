@@ -454,9 +454,11 @@ function App() {
             </div>
             <h3 className="text-2xl text-gray-200 mb-2">Upload Your Resume</h3>
             <p className=" text-lg text-gray-400 mb-6">
-              {" "}
+
               PDF or Word documents (.doc, .docx) supported
             </p>
+
+            {/* choose file button */}
             <input
               type="file"
               accept=".pdf,.docx"
@@ -467,8 +469,10 @@ function App() {
             />
             <label
               htmlFor="file-upload"
-              className={`inline-block px-8 py-3 rounded-lg font-bold cursor-pointer transition-all  bg-cyan-500 text-white hover:bg-cyan-400 hover:shadow-lg hover:shadow-cyan-500/30 `}>
-              Choose File (PDF or Word)
+              className= "btn-primary inline-block"
+              >
+              Choose File
+              
             </label>
 
             {!APIReady && (
