@@ -34,7 +34,7 @@ function App() {
   const [jobDescription, setJobDescription] = useState("");
   const [jobMatchResult, setJobMatchResult] = useState(null);
   const [showResults, setShowResults] = useState(false);
-
+  const [isDragging, setIsDragging] = useState(false);
   
   // ==========================================
   // ⚡ CHECK BACKEND API
@@ -303,6 +303,41 @@ function App() {
     const file = e.target.files[0];
     await processFile(file);
   };
+
+  // ==========================================
+  // 🆕 DRAG & DROP
+  // ==========================================
+  const handleDragEnter = (e) => {
+    e.preventDefault();
+    e.stopPropagation();
+    setIsDragging(true);
+  };
+
+  const handleDragOver = (e) => {
+    e.preventDefault();
+    e.stopPropagation();
+    e.dataTransfer.dropEffect = "copy";
+  };
+
+  const handleDragLeave = (e) => {
+    e.preventDefault();
+    e.stopPropagation();
+    if (e.currentTarget === e.target) {
+      setIsDragging(false);
+    }
+  };
+
+  const handleDrop = async (e) => {
+    e.preventDefault();
+    e.stopPropagation();
+    setIsDragging(false);
+
+    const files = e.dataTransfer.files;
+    if (files && files.length > 0) {
+      await processFile(files[0]);
+    }
+  };
+
 
    // ==========================================
   // 🔄 RESET
