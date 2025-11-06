@@ -399,10 +399,10 @@ function App() {
               onClick={() => {setMode("analyzer");
                 reset();
               }}
-              className={`px-6 py-3 rounded-lg font-semibold transition-all ${
-                mode === "analyzer"
-                  ? "bg-cyan-500 text-white shadow-lg shadow-cyan-500/30"
-                  : "bg-slate-800 text-gray-300 hover:bg-slate-700 border border-slate-700"
+              className={`px-6 py-3 rounded-xl font-semibold transition-all duration-300 ${
+              mode === "analyzer"
+                ? "bg-gradient-to-r from-cyan-500 to-blue-500 text-white shadow-lg"
+                : "bg-slate-700/50 text-slate-300 hover:bg-slate-700"
               }`}
             >
               📊 Resume Analyzer
