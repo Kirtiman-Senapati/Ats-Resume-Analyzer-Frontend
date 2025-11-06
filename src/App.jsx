@@ -34,7 +34,6 @@ function App() {
   const [jobDescription, setJobDescription] = useState("");
   const [jobMatchResult, setJobMatchResult] = useState(null);
   const [showResults, setShowResults] = useState(false);
-  const [isDragging, setIsDragging] = useState(false);
 
   
   // ==========================================
@@ -305,42 +304,6 @@ function App() {
     await processFile(file);
   };
 
-
-  // ==========================================
-  // 🆕 DRAG & DROP
-  // ==========================================
-  const handleDragEnter = (e) => {
-    e.preventDefault();
-    e.stopPropagation();
-    setIsDragging(true);
-  };
-
-  const handleDragOver = (e) => {
-    e.preventDefault();
-    e.stopPropagation();
-    e.dataTransfer.dropEffect = "copy";
-  };
-
-  const handleDragLeave = (e) => {
-    e.preventDefault();
-    e.stopPropagation();
-    if (e.currentTarget === e.target) {
-      setIsDragging(false);
-    }
-  };
-
-  const handleDrop = async (e) => {
-    e.preventDefault();
-    e.stopPropagation();
-    setIsDragging(false);
-
-    const files = e.dataTransfer.files;
-    if (files && files.length > 0) {
-      await processFile(files[0]);
-    }
-  };
-
-
    // ==========================================
   // 🔄 RESET
   // ==========================================
@@ -481,21 +444,10 @@ function App() {
           </div>
         )}
 
-        {/* File Upload Section UPLOAD AREA  */}
+        {/* File Upload Section/ /* UPLOAD AREA  */}
 
         {!showResults && (
-          <div className = {`upload-area ${
-              isDragging ? "border-cyan-400 bg-cyan-500/10" : ""
-            }`}
-            onDragEnter={handleDragEnter}
-            onDragOver={handleDragOver}
-            onDragLeave={handleDragLeave}
-            onDrop={handleDrop}>
-
-            {/* upload zone */}
-
-            <div className="upload-zone">
-              <div className="mb-6">
+          <div className="bg-slate-800/60 border-2 border-dashed border-cyan-600/50 rounded-xl p-12 text-center hover:border-cyan-500 transition-all shadow-lg shadow-cyan-900/20">
           
             <div className="w-20 h-20 mx-auto mb-4 bg-gradient-to-br from-cyan-400 to-blue-500 rounded-2xl flex items-center justify-center">
              <span className="text-4xl">📄</span>
@@ -505,8 +457,6 @@ function App() {
 
               PDF or Word documents (.doc, .docx) supported
             </p>
-
-            </div>
 
             {/* choose file button */}
             <input
@@ -530,7 +480,7 @@ function App() {
                   ⚠️ Backend not ready. Please start your server.
                 </p>
               )}
-            </div>
+
           </div>
           
         )}
