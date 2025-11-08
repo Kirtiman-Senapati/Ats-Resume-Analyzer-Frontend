@@ -15,8 +15,7 @@ pdfjslib.GlobalWorkerOptions.workerSrc = pdfjsWorker;
 // 📗 AXIOS CONFIGURATION
 // ==========================================
 const api = axios.create({
-  baseURL: import.meta.env.VITE_API_URL || 'http://localhost:5000',
-  timeout: 60000,
+  baseURL: import.meta.env.VITE_API_URL ||'http://localhost:5000/api',
   headers: {
     'Content-Type': 'application/json',
   }
@@ -42,7 +41,7 @@ function App() {
   useEffect(() => {
     const checkBackend = async () => {
       try {
-        const response = await api.get('/health');
+        const response = await api.get('/api/health');
         
         if (response.data.status === 'ok') {
           setAPIReady(true);
@@ -144,7 +143,7 @@ function App() {
 
       console.log("📤 Calling backend API...");
 
-      const response = await api.post('/analyze-resume', {
+      const response = await api.post('/api/analyze-resume', {
         resumeText: text,
         prompt: constants.ANALYZE_RESUME_PROMPT,
       });
@@ -185,7 +184,7 @@ function App() {
 
       console.log("📤 Sending match request...");
 
-      const response = await api.post('/match-job', {
+      const response = await api.post('/api/match-job', {
         resumeText: resumeText,
         jobDescription: jobDesc,
         prompt: constants.JOB_MATCH_PROMPT,
